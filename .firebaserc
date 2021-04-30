@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "birthdayapp-7b398"
+  },
+  "targets": {
+    "birthdayapp-7b398": {
+      "hosting": {
+        "BirthdayApp": [
+          "birthdayapp-7b398"
+        ]
+      }
+    }
   }
 }
