@@ -9,7 +9,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-
+import { VideoRecordingService } from './video-recording.service';
 import { environment } from '../environments/environment'
 
 
@@ -28,6 +28,7 @@ import { environment } from '../environments/environment'
     AngularFireAuthModule, // auth
     AngularFireStorageModule // storage
   ],
+  providers: [VideoRecordingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

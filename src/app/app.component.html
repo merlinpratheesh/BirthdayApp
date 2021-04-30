@@ -1,57 +1,81 @@
 <div fxLayoutAlign="center center">
-<mat-card fxLayout="column" fxLayoutAlign="center center"
-  style=" width:500px; margin-top: 100px; height:400px;background-color:palegreen;">
-  <div fxLayout="row" style=" margin-left: 15px; ">
-    <div fxLayout="column" fxLayoutAlign="space-around center">
-      <img [src]="profileUrl | async" alt="profile image" width="200" height="250">
+  <mat-card fxLayout="column" fxLayoutAlign="center center"
+    style=" width:600px;  height:600px;background-color:palegreen;">
+    <div fxLayout="row" style=" margin-left: 15px; ">
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <img [src]="profileUrl | async" alt="profile image" width="200" height="250">
 
 
-      <div fxLayout="row">
-        <div>
+        <div fxLayout="row">
+          <div>
 
-          <a href="#" target="_blank"><span class="mdi mdi-instagram"></span></a>
-          <a href="#" target="_blank"><span class="mdi mdi-telegram"></span></a>
-          <a href="#" target="_blank"><span class="mdi mdi-twitter"></span></a>
-          <a href="#" target="_blank"><span class="mdi mdi-gmail"></span></a>
+            <a href="#" target="_blank"><span class="mdi mdi-instagram"></span></a>
+            <a href="#" target="_blank"><span class="mdi mdi-telegram"></span></a>
+            <a href="#" target="_blank"><span class="mdi mdi-twitter"></span></a>
+            <a href="#" target="_blank"><span class="mdi mdi-gmail"></span></a>
+          </div>
+
         </div>
+
+        <div>MerlinPrathees R</div>
+        <input type="file" (change)="uploadFile($event)" />
+        <div>
+          <button class="start-button" *ngIf="!isVideoRecording && !videoBlobUrl" (click)="startVideoRecording()">Start
+            Video Recording</button>
+          <button class="stop-button" *ngIf="isVideoRecording && !videoBlobUrl" (click)="stopVideoRecording()">Stop Video
+            Recording</button>
+          <button class="cancel-button" *ngIf="!isVideoRecording && videoBlobUrl" (click)="clearVideoRecordedData()">Clear
+            Video Recording</button>
+          <button class="download-button" *ngIf="!isVideoRecording && videoBlobUrl"
+            (click)="downloadVideoRecordedData()">Download Video Recording</button>
+          <div id="videoTimer" *ngIf="isVideoRecording && !videoBlobUrl"> {{ videoRecordedTime }} </div>
+        </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="text-center">
+            <h3>
+              <video #videoElement>
+                <source *ngIf="!isVideoRecording && videoBlobUrl" [src]="videoBlobUrl">
+              </video>
+            </h3>
+          </div>
+        </div>
+      </div>
 
       </div>
 
-      <div>MerlinPrathees R</div>
-      <input type="file" (change)="uploadFile($event)" />
+      <div fxLayout="column">
+        <form [formGroup]="dateForm">
+          <mat-form-field style="width: 200px;">
+            <input matInput placeholder="DOB" [matDatepicker]="birthdatePicker" (click)="datePicker.open()"
+              formControlName="DOB"> {{this.oldDOB?.toDate() | date:'dd-MM-yyyy'}}
+            <mat-datepicker-toggle matSuffix [for]="birthdatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #birthdatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field style="width: 200px;">
+            <input matInput placeholder="Anniv" [matDatepicker]="anniversarydatePicker" (click)="datePicker.open()"
+              formControlName="Anniv">{{this.oldAnniv?.toDate() | date:'dd-MM-yyyy'}}
+            <mat-datepicker-toggle matSuffix [for]="anniversarydatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #anniversarydatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field style="width: 200px;">
+            <input matInput placeholder="DOD" [matDatepicker]="datePicker" (click)="datePicker.open()"
+              formControlName="DOD">{{this.oldDOD?.toDate() | date:'dd-MM-yyyy'}}
+            <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker></mat-datepicker>
+          </mat-form-field>
+
+          <button class="btn btn-primary" (click)=update() type="submit">Submit</button>
+
+        </form>
+
+      </div>
 
     </div>
-
-    <div fxLayout="column">
-      <form [formGroup]="dateForm"  >
-        <mat-form-field  style="width: 200px;">
-            <input matInput placeholder= "DOB" [matDatepicker]="birthdatePicker" (click)="datePicker.open()"  
-            formControlName="DOB" > {{this.oldDOB?.toDate() | date:'dd-MM-yyyy'}}
-          <mat-datepicker-toggle matSuffix [for]="birthdatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #birthdatePicker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field style="width: 200px;">
-          <input matInput placeholder="Anniv" [matDatepicker]="anniversarydatePicker" (click)="datePicker.open()"
-             formControlName="Anniv"  >{{this.oldAnniv?.toDate() | date:'dd-MM-yyyy'}}
-          <mat-datepicker-toggle matSuffix [for]="anniversarydatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #anniversarydatePicker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field style="width: 200px;">
-          <input matInput placeholder= "DOD"  [matDatepicker]="datePicker" (click)="datePicker.open()"
-            formControlName="DOD" >{{this.oldDOD?.toDate() | date:'dd-MM-yyyy'}}
-          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-          <mat-datepicker #datePicker></mat-datepicker>
-        </mat-form-field>
-
-        <button class="btn btn-primary" (click)=update() type="submit">Submit</button> 
-
-      </form>
-
-    </div>
-
-  </div>
-</mat-card>
+  </mat-card>
 </div>
+
+
 
 
 
@@ -63,5 +87,3 @@
 
 
 {{this.dateRef |async |json}}
-
-
