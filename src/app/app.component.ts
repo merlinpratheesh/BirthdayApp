@@ -3,13 +3,15 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage'
 import { finalize } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { FormControl, FormGroup } from '@angular/forms';
 import { allDates } from './service/userdata.service';
-import * as firebase from 'firebase';
-import * as  Firestore  from '@angular/fire/firestore';
+import * as  Firestore from '@angular/fire/firestore';
 import '@firebase/firestore';
+import { doc, docData } from 'rxfire/firestore';
+
+
 
 @Component({
   selector: 'app-root',
@@ -20,10 +22,6 @@ export class AppComponent {
   title = 'zerodha';
   events: string[] = [];
 
-
-  public DOB;
-  public Anniv;
-  public DOD;
   public dateForm = new FormGroup({
     DOB: new FormControl(),
     Anniv: new FormControl(),
@@ -58,48 +56,82 @@ export class AppComponent {
     return this.getAlldatesBehaviourSub;
   };
   dateRef: BehaviorSubject<any>;
- 
-  
-  constructor(private storage: AngularFireStorage, private db: AngularFirestore,private changeDetectorRef: ChangeDetectorRef ) {
+  allDates: Subscription;
+  oldDOB: any;
+  oldAnniv: any;
+  oldDOD: any;
+  DOB:any;
+  Anniv: any;
+  DOD: any;
 
+
+  constructor(private storage: AngularFireStorage, 
+    private db: AngularFirestore, 
+    private changeDetectorRef: ChangeDetectorRef) {
     const ref = this.storage.ref('/users');
     this.profileUrl = ref.getDownloadURL();
 
-    this.dateRef = this.getAlldates((this.db.doc('testme/one-id')));
-    console.log(this.dateRef);
 
 
+
+    this.allDates = docData(this.db.firestore.doc('testme/one-id')).subscribe((read: any) => {
+
+      if (read !== null && read !== undefined) {
+      const allDatesRef=read.newItem;
+      this.oldDOB=allDatesRef.DOB;
+      this.oldAnniv=allDatesRef.Anniv;
+      this.oldDOD=allDatesRef.DOD;
+
+
+
+      console.log('280',allDatesRef);
+      console.log('280',this.oldDOB);
+      }
+    });
   }
-
-
 
   uploadFile(event) {
     const file = event.target.files[0];
     const filePath = 'users';
     const fileRef = this.storage.ref(filePath);
     const task = this.storage.upload(filePath, file);
-
-
-    // observe percentage changes
     this.uploadPercent = task.percentageChanges();
-    // get notified when the download URL is available
     task.snapshotChanges().pipe(
-        finalize(() => this.downloadURL = fileRef.getDownloadURL() )
-     )
-    .subscribe()
+      finalize(() => this.downloadURL = fileRef.getDownloadURL())
+    ).subscribe()
   }
+
+
+
   update() {
 
+    
+      this.DOB= this.dateForm.get('DOB').value,
+      this.Anniv=this.dateForm.get('Anniv').value,
+      this.DOD= this.dateForm.get('DOD').value
 
+    //const res = this.db.collection('testme').doc('one-id').set({newItem}, {merge:true});
+if(this.DOB===null){
+  this.DOB=this.oldDOB
+}
+if(this.Anniv===null){
+  this.Anniv=this.oldAnniv
+}
+if(this.DOD===null){
+  this.DOD=this.oldDOD
+}
+        
     const newItem = {
-      DOB: this.dateForm.get('DOB').value,
-      Anniv: this.dateForm.get('Anniv').value,
-      DOD: this.dateForm.get('DOD').value,
+      DOB: this.DOB,
+      Anniv: this.Anniv,
+      DOD: this.DOD,
     }
-    console.log(newItem);
- 
 
-    const res = this.db.collection('testme').doc('one-id').set({newItem}, {merge:true});
+    console.log(newItem);
+    const res = this.db.collection('testme').doc('one-id').set({ newItem }, { merge: true });
   }
+
+
+  
 }
 
