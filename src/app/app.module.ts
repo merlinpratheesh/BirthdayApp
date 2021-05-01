@@ -10,12 +10,18 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
-import { environment } from '../environments/environment'
+import { environment } from '../environments/environment';
+import { ListOfModulesComponent } from './list-of-modules/list-of-modules.component';
+import { AuthComponent } from './Regular/auth/auth.component';
+import { OnlineComponent } from './Regular/online/online.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ListOfModulesComponent,
+    OnlineComponent,
+    AuthComponent
 
   ],
   imports: [

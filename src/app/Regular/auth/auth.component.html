@@ -1,0 +1,24 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+  
+        <span  fxHide fxShow.gt-xs>Family App for New Generation-main</span>
+        <span  fxShow fxHide.gt-xs>Family App for New Gen!</span>
+        <span fxFlex> </span>
+        <div *ngIf="this.AuthCheck| async as user; else login" >
+            <mat-spinner [fxShow] ="showspinner === true"  color="accent" strokeWidth="50" diameter="15"></mat-spinner>
+            <button mat-raised-button fxHide fxShow.gt-xs color="accent" (click)="LogOff()"><i
+                    class="material-icons" (click)="LogOff()"> exit_to_app</i><span> Welcome
+                    {{user.displayName}}</span></button>
+  
+        </div>
+        <ng-template #login>
+            <mat-spinner [fxShow] ="showspinner === null"  color="accent" strokeWidth="50" diameter="15"></mat-spinner>
+            <button  mat-raised-button fxHide [fxShow.gt-xs] ="showspinner !== null" color="accent" (click)="developmentservice.login()"><i
+                    class="material-icons" >
+                    power_settings_new</i><span>SignUp</span></button>
+  
+        </ng-template>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  
+  <router-outlet></router-outlet> 
