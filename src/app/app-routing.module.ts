@@ -12,6 +12,9 @@ const routes: Routes = [
    { path: 'online', component: OnlineComponent },
    { path: 'auth', component: AuthComponent },
 
+   { path: '**', redirectTo: 'ListOfModules', pathMatch: 'full'}
+
+
 
 
 ]

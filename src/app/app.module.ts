@@ -16,6 +16,7 @@ import { AuthComponent } from './Regular/auth/auth.component';
 import { OnlineComponent } from './Regular/online/online.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,

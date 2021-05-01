@@ -21,5 +21,9 @@ export class ListOfModulesComponent implements OnInit {
     this.router.navigate(['/auth']);
 
   }
+  login(){
+    this.router.navigate(['/auth']);
+
+  }
 
 }
