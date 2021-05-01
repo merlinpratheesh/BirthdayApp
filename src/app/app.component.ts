@@ -190,6 +190,7 @@ if(this.DOD===null){
     if (!this.isVideoRecording) {
       this.video.controls = false;
       this.isVideoRecording = true;
+      this.video.muted = !this.video.muted;
       this.videoRecordingService
         .startRecording(this.videoConf)
         .then(stream => {
