@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import firebase from 'firebase/app';
+import { of, merge, fromEvent, Observable,Subscription } from 'rxjs';
+import { map, first } from 'rxjs/operators';
+import { FormControl, FormGroup } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { first } from 'rxjs/operators';
 
-export interface allDates {
-  DOB: Date;
-  Anniv: Date;
-  DOD:Date;
-}
+
+export interface userProfile {
+  userAuthenObj: firebase.User,//Receive User obj after login success
+} 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,22 +18,29 @@ export interface allDates {
 
 export class UserdataService {
 
-  constructor(private db: AngularFirestore) { }
+  isOnline$!: Observable<boolean>;
 
-  allDatesfindOrCreate(): any {
-    return this.db.doc(`projectList/uid`).valueChanges().pipe(first()).toPromise();
-  }
+  constructor(public auth: AngularFireAuth, private db: AngularFirestore) {
+
+
+      this.isOnline$ = merge(
+        of(null),
+        fromEvent(window, 'online'),
+        fromEvent(window, 'offline')
+      ).pipe(map(() => navigator.onLine));
   
-  async privateProjectfindOrCreate(uid: string): Promise<allDates> {
-    const project: allDates = await this.allDatesfindOrCreate();
-    console.log('110 returned', project);
+   }
+   login() {
+    return this.auth.signInWithPopup(new (firebase.auth as any).GoogleAuthProvider()).catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      if (errorCode === 'auth/popup-closed-by-user' || errorCode === 'auth/network-request-failed') {
 
-    if (project) {
-      console.log('110', uid);
-      return project;
-    } else {
-      return undefined;
-    }
+        //alert('Check Internet Connection');
+        location.reload();
+      }
+    });
   }
+
 
 }

@@ -1,15 +1,17 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage'
-import { finalize } from 'rxjs/operators';
+import { finalize, map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { FormControl, FormGroup } from '@angular/forms';
-import { allDates } from './service/userdata.service';
 import * as  Firestore from '@angular/fire/firestore';
 import '@firebase/firestore';
+import firebase from 'firebase/app';
 import { doc, docData } from 'rxfire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { UserdataService, userProfile } from './service/userdata.service';
 
 
 
@@ -20,118 +22,63 @@ import { doc, docData } from 'rxfire/firestore';
 })
 export class AppComponent {
   title = 'zerodha';
-  events: string[] = [];
-
-  public dateForm = new FormGroup({
-    DOB: new FormControl(),
-    Anniv: new FormControl(),
-    DOD: new FormControl(),
-  });
-
-  uploadPercent: Observable<number>;
-  downloadURL: Observable<string>;
-  profileUrl: Observable<string | null>;
-
-  Sections = of(undefined);
-  getAlldatesSubscription: Subscription;
-  getAlldatesBehaviourSub = new BehaviorSubject(undefined);
-
-  getAlldates = (Dates: AngularFirestoreDocument<allDates>) => {
-    if (this.getAlldatesSubscription !== undefined) {
-      this.getAlldatesSubscription.unsubscribe();
-    }
-    this.getAlldatesSubscription = Dates.valueChanges().subscribe((val: any) => {
-      if (val === undefined) {
-        this.getAlldatesBehaviourSub.next(undefined);
-      } else {
-        if (val.length === 0) {
-          this.getAlldatesBehaviourSub.next(null);
-        } else {
-          if (val.length !== 0) {
-            this.getAlldatesBehaviourSub.next(val.newItem);
-          }
-        }
-      }
-    });
-    return this.getAlldatesBehaviourSub;
+  myuserProfile: userProfile = {
+    userAuthenObj: null,//Receive User obj after login success
   };
-  dateRef: BehaviorSubject<any>;
-  allDates: Subscription;
-  oldDOB: any;
-  oldAnniv: any;
-  oldDOD: any;
-  DOB:any;
-  Anniv: any;
-  DOD: any;
+  myauth;
+  subjectauth = new BehaviorSubject(undefined);
+  getObservableauthStateSub: Subscription = new Subscription;
+  getObservableauthState = (authdetails: Observable<firebase.User>) => {
+    if (this.getObservableauthStateSub !== undefined) {
+      this.getObservableauthStateSub.unsubscribe();
+    }
+    this.getObservableauthStateSub = authdetails.subscribe((val: any) => {
+      this.subjectauth.next(val);
+      console.log(val);
 
-
-  constructor(private storage: AngularFireStorage, 
-    private db: AngularFirestore, 
-    private changeDetectorRef: ChangeDetectorRef) {
-    const ref = this.storage.ref('/users');
-    this.profileUrl = ref.getDownloadURL();
-
-
-
-
-    this.allDates = docData(this.db.firestore.doc('testme/one-id')).subscribe((read: any) => {
-
-      if (read !== null && read !== undefined) {
-      const allDatesRef=read.newItem;
-      this.oldDOB=allDatesRef.DOB;
-      this.oldAnniv=allDatesRef.Anniv;
-      this.oldDOD=allDatesRef.DOD;
-
-
-
-      console.log('280',allDatesRef);
-      console.log('280',this.oldDOB);
-      }
     });
-  }
+    return this.subjectauth;
+  };
+  myonline;
+  subjectonline = new BehaviorSubject(undefined);
+  getObservableonlineSub: Subscription = new Subscription;
+  getObservableonine = (localonline: Observable<boolean>) => {
+    this.getObservableonlineSub?.unsubscribe();
+    this.getObservableonlineSub = localonline.subscribe((valOnline: any) => {
+      this.subjectonline.next(valOnline);
+      console.log(valOnline);
 
-  uploadFile(event) {
-    const file = event.target.files[0];
-    const filePath = 'users';
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, file);
-    this.uploadPercent = task.percentageChanges();
-    task.snapshotChanges().pipe(
-      finalize(() => this.downloadURL = fileRef.getDownloadURL())
-    ).subscribe()
-  }
+    });
+    return this.subjectonline;
+  };
+  AfterOnlineCheckAuth: any;
 
+  constructor(public afAuth: AngularFireAuth, public developmentservice: UserdataService) {
+    this.myonline = this.getObservableonine(this.developmentservice.isOnline$);
+    console.log('58',this.myonline);
 
+    this.myauth = this.getObservableauthState(this.afAuth.authState);
 
-  update() {
-
-    
-      this.DOB= this.dateForm.get('DOB').value,
-      this.Anniv=this.dateForm.get('Anniv').value,
-      this.DOD= this.dateForm.get('DOD').value
-
-    //const res = this.db.collection('testme').doc('one-id').set({newItem}, {merge:true});
-if(this.DOB===null){
-  this.DOB=this.oldDOB
-}
-if(this.Anniv===null){
-  this.Anniv=this.oldAnniv
-}
-if(this.DOD===null){
-  this.DOD=this.oldDOD
-}
-        
-    const newItem = {
-      DOB: this.DOB,
-      Anniv: this.Anniv,
-      DOD: this.DOD,
+    if(this.myonline=true){
+      console.log('Online');
+      if (this.myauth  !== null && this.myauth  !== undefined) {
+        console.log('61',this.myauth );
+      this.myuserProfile.userAuthenObj= this.myauth
+    }
+    else{
+        console.log('Offline');
     }
 
-    console.log(newItem);
-    const res = this.db.collection('testme').doc('one-id').set({ newItem }, { merge: true });
   }
 
 
-  
+
+  }
+
+  LogOff() {
+    this.afAuth.signOut();
+
+  }
+
 }
 
