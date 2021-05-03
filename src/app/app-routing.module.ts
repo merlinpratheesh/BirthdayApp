@@ -14,6 +14,8 @@ const routes: Routes = [
   { path: 'frontscreen', loadChildren: () => import('./Regular/frontscreen/frontscreen.module').then(m => m.FrontscreenModule) },
   { path: 'memberdetails', loadChildren: () => import('./Regular/memberdetails/memberdetails.module').then(m => m.MemberdetailsModule) },
 
+  { path: 'mymapdetails', loadChildren: () => import('./Regular/my-map-details/my-map-details.module').then(m => m.MyMapDetailsModule) },
+
    { path: '**', redirectTo: 'ListOfModules', pathMatch: 'full'}
 
 

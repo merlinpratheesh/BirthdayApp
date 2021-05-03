@@ -29,6 +29,10 @@ export class ListOfModulesComponent implements OnInit {
     this.router.navigate(['/memberdetails']);
 
   }
+  myMapDetails(){
+    this.router.navigate(['/mymapdetails']);
+
+  }
 
 
 
