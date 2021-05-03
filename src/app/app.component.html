@@ -1,67 +1,32 @@
-<div fxLayoutAlign="center center">
-<mat-card fxLayout="column" fxLayoutAlign="center center"
-  style=" width:500px; margin-top: 100px; height:400px;background-color:palegreen;">
-  <div fxLayout="row" style=" margin-left: 15px; ">
-    <div fxLayout="column" fxLayoutAlign="space-around center">
-      <img [src]="profileUrl | async" alt="profile image" width="200" height="250">
 
 
-      <div fxLayout="row">
-        <div>
-
-          <a href="#" target="_blank"><span class="mdi mdi-instagram"></span></a>
-          <a href="#" target="_blank"><span class="mdi mdi-telegram"></span></a>
-          <a href="#" target="_blank"><span class="mdi mdi-twitter"></span></a>
-          <a href="#" target="_blank"><span class="mdi mdi-gmail"></span></a>
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <button mat-icon-button (click)="auth.leftMenuPress.next(true)">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <span  fxHide fxShow.gt-xs>Family App for New Generation-main</span>
+        <span  fxShow fxHide.gt-xs>Family App for New Gen!</span>
+        <span fxFlex> </span>
+        <div *ngIf="auth.user$ | async as user; else login" >
+            <mat-spinner [fxShow] ="showspinner === true"  color="accent" strokeWidth="50" diameter="15"></mat-spinner>
+            <button mat-raised-button fxHide fxShow.gt-xs color="accent" (click)="signOut()"><i
+                    class="material-icons" (click)="signOut()"> exit_to_app</i><span> Welcome
+                    {{user.displayName}}</span></button>
+            <button mat-raised-button fxShow fxHide.gt-xs (click)="signOut()"><i class="material-icons"
+                    (click)="signOut()"> exit_to_app</i></button>
         </div>
-
-      </div>
-
-      <div>MerlinPrathees R</div>
-      <input type="file" (change)="uploadFile($event)" />
-
-    </div>
-
-    <div fxLayout="column">
-      <form [formGroup]="dateForm"  >
-        <mat-form-field  style="width: 200px;">
-            <input matInput placeholder= "DOB" [matDatepicker]="birthdatePicker" (click)="datePicker.open()"  
-            formControlName="DOB" > {{this.oldDOB?.toDate() | date:'dd-MM-yyyy'}}
-          <mat-datepicker-toggle matSuffix [for]="birthdatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #birthdatePicker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field style="width: 200px;">
-          <input matInput placeholder="Anniv" [matDatepicker]="anniversarydatePicker" (click)="datePicker.open()"
-             formControlName="Anniv"  >{{this.oldAnniv?.toDate() | date:'dd-MM-yyyy'}}
-          <mat-datepicker-toggle matSuffix [for]="anniversarydatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #anniversarydatePicker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field style="width: 200px;">
-          <input matInput placeholder= "DOD"  [matDatepicker]="datePicker" (click)="datePicker.open()"
-            formControlName="DOD" >{{this.oldDOD?.toDate() | date:'dd-MM-yyyy'}}
-          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-          <mat-datepicker #datePicker></mat-datepicker>
-        </mat-form-field>
-
-        <button class="btn btn-primary" (click)=update() type="submit">Submit</button> 
-
-      </form>
-
-    </div>
-
-  </div>
-</mat-card>
-</div>
+        <ng-template #login>
+            <mat-spinner [fxShow] ="showspinner === null"  color="accent" strokeWidth="50" diameter="15"></mat-spinner>
+            <button  mat-raised-button fxHide [fxShow.gt-xs] ="showspinner !== null" color="accent" (click)="googleSignin()"><i
+                    class="material-icons" (click)="googleSignin()">
+                    power_settings_new</i><span>SignUp</span></button>
+            <button mat-raised-button [fxShow] ="showspinner !== null" fxHide.gt-xs (click)="googleSignin()"><i class="material-icons"
+                    (click)="googleSignin()"> power_settings_new</i></button>
+            
+        </ng-template>
+    </mat-toolbar-row>
+</mat-toolbar>
 
 
-
-<input type="file" (change)="uploadFile($event)" />
-<div>{{ uploadPercent | async }}</div>
-<a [href]="downloadURL | async">{{ downloadURL | async }}</a>
-
-
-
-
-{{this.dateRef |async |json}}
-
-
+<router-outlet></router-outlet>
