@@ -12,6 +12,7 @@ import { faWhatsapp } from '@fortawesome/free-brands-svg-icons/faWhatsapp'
 import { faSignInAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { ShareIconsModule } from 'ngx-sharebuttons/icons';
 import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
+import { faArrowAltCircleDown, faAngleDoubleLeft, faAngleDoubleRight, faAngleDoubleUp, faPlus, faMinus, faCalendarAlt, faGifts, faMale, faFemale, faTransgender, faKissWinkHeart, faChild} from '@fortawesome/free-solid-svg-icons';
 
 
 @NgModule({
@@ -31,6 +32,6 @@ import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
 export class AppSharedModule { 
   constructor(private library: FaIconLibrary) {
     // tslint:disable-next-line: max-line-length
-    library.addIcons(faFacebookSquare,faTwitterSquare,faPinterest, faWhatsapp, faSignInAlt, faSignOutAlt  );
+    library.addIcons(faAngleDoubleLeft, faAngleDoubleRight, faAngleDoubleUp, faPlus, faMinus, faCalendarAlt, faGifts, faArrowAltCircleDown, faMale, faFemale, faTransgender,  faKissWinkHeart, faChild);
     }
   }

@@ -12,6 +12,7 @@ const routes: Routes = [
    { path: 'online', component: OnlineComponent },
    { path: 'auth', component: AuthComponent },
   { path: 'frontscreen', loadChildren: () => import('./Regular/frontscreen/frontscreen.module').then(m => m.FrontscreenModule) },
+  { path: 'memberdetails', loadChildren: () => import('./Regular/memberdetails/memberdetails.module').then(m => m.MemberdetailsModule) },
 
    { path: '**', redirectTo: 'ListOfModules', pathMatch: 'full'}
 
