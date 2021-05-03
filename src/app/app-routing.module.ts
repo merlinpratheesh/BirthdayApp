@@ -11,6 +11,7 @@ const routes: Routes = [
    { path: 'ListOfModules', component: ListOfModulesComponent },
    { path: 'online', component: OnlineComponent },
    { path: 'auth', component: AuthComponent },
+  { path: 'frontscreen', loadChildren: () => import('./Regular/frontscreen/frontscreen.module').then(m => m.FrontscreenModule) },
 
    { path: '**', redirectTo: 'ListOfModules', pathMatch: 'full'}
 

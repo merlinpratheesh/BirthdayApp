@@ -14,6 +14,10 @@ import { environment } from '../environments/environment';
 import { ListOfModulesComponent } from './list-of-modules/list-of-modules.component';
 import { AuthComponent } from './Regular/auth/auth.component';
 import { OnlineComponent } from './Regular/online/online.component';
+import { LeftSidenavContentComponent } from './Regular/frontscreen/left-sidenav-content/left-sidenav-content.component';
+import { RightSidenavContentComponent } from './Regular/frontscreen/right-sidenav-content/right-sidenav-content.component';
+import { CenterContentComponent } from './Regular/frontscreen/center-content/center-content.component';
+
 
 
 
@@ -22,7 +26,8 @@ import { OnlineComponent } from './Regular/online/online.component';
     AppComponent,
     ListOfModulesComponent,
     OnlineComponent,
-    AuthComponent
+    AuthComponent,
+
 
   ],
   imports: [

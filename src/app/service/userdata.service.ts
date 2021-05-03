@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import firebase from 'firebase/app';
-import { of, merge, fromEvent, Observable,Subscription } from 'rxjs';
+import { of, merge, fromEvent, Observable,Subscription, Subject } from 'rxjs';
 import { map, first } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -19,8 +19,12 @@ export interface userProfile {
 export class UserdataService {
 
   isOnline$!: Observable<boolean>;
+  leftMenuPress = new Subject();
+  user$: any;
 
   constructor(public auth: AngularFireAuth, private db: AngularFirestore) {
+
+    
 
 
       this.isOnline$ = merge(

@@ -22,7 +22,7 @@ export class ListOfModulesComponent implements OnInit {
 
   }
   login(){
-    this.router.navigate(['/auth']);
+    this.router.navigate(['/frontscreen']);
 
   }
 
