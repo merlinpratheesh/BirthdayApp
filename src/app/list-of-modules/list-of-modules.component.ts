@@ -34,6 +34,11 @@ export class ListOfModulesComponent implements OnInit {
 
   }
 
+  profilepage(){
+    this.router.navigate(['/profilepage']);
+
+  }
+
 
 
 }

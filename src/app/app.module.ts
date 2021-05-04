@@ -9,14 +9,11 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-
 import { environment } from '../environments/environment';
 import { ListOfModulesComponent } from './list-of-modules/list-of-modules.component';
 import { AuthComponent } from './Regular/auth/auth.component';
 import { OnlineComponent } from './Regular/online/online.component';
-import { LeftSidenavContentComponent } from './Regular/frontscreen/left-sidenav-content/left-sidenav-content.component';
-import { RightSidenavContentComponent } from './Regular/frontscreen/right-sidenav-content/right-sidenav-content.component';
-import { CenterContentComponent } from './Regular/frontscreen/center-content/center-content.component';
+
 
 
 
