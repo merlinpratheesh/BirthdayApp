@@ -1,6 +1,14 @@
 <router-outlet></router-outlet> 
 <div fxLayout='column' fxLayoutAlign="center center" >
-<button style="width: 200px;" mat-raised-button color="warn" (click)="online()">
+  <div fxLayout="row wrap"  style="border-radius: 1em; border-style:dotted; border-color: red;height:50vh;">
+    <span fxLayout="column" fxFlexOffset="50vw"  style="border-radius: 1em; border-style:dotted; border-color: blue;height:25vh;">
+    
+    </span>
+    
+    <span fxLayout="column" fxFlex="100px" fxLayoutGap="10%" fxFlexOffset="50vw" >
+    
+
+  <button style="width: 200px;" mat-raised-button color="warn" (click)="online()">
  Online
   </button>
   <button style="width: 200px;" mat-raised-button color="warn" (click)="auth()">
@@ -15,4 +23,5 @@ memberdetails         </button>
   myMapDetails        </button>
   <button style="width: 200px;" mat-raised-button color="warn" (click)=" profilepage ()">
     profilepage        </button>
-    </div>
+  </span>
+</div>
