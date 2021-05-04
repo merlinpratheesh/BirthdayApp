@@ -10,6 +10,11 @@ import {Subject} from 'rxjs';
 import firebase from 'firebase'
 
 
+export interface allDates {
+  DOB: Date;
+  Anniv: Date;
+  DOD:Date;
+}
 export interface userProfile {
   userAuthenObj: firebase.User,//Receive User obj after login success
 } 

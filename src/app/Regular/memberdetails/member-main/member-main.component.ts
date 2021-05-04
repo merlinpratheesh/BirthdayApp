@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserdataService } from 'src/app/service/userdata.service';
+import { allDates, UserdataService } from 'src/app/service/userdata.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { BehaviorSubject, of, Subscription } from 'rxjs';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 
 export interface Tile {
@@ -9,6 +11,7 @@ export interface Tile {
   rows: number;
   text: string;
 }
+
 @Component({
   selector: 'app-member-main',
   templateUrl: './member-main.component.html',
@@ -30,9 +33,13 @@ export class MemberMainComponent implements OnInit {
     {text: 'Navi-right', cols: 1, rows: 4, color: ''}];
 
   tileskids: Tile[] = [ 
-    {text: 'girl', cols: 2, rows: 4, color: 'lightgreen'},
-    {text: 'boy', cols: 2, rows: 4, color: 'lightpink'},
-    {text: 'girl', cols: 2, rows: 4, color: 'lightgreen'}];
+    {text: 'Navi-left', cols: 1, rows: 4, color: ''},
+    {text: 'girl', cols: 5, rows: 4, color: 'lightgreen'},
+    {text: 'boy', cols: 5, rows: 4, color: 'lightpink'},
+    {text: '3rdchild', cols: 5, rows: 4, color: 'lightgreen'},
+    {text: 'Navi-right', cols: 1, rows: 4, color: ''}];
+
+    
 
   tilesconrols: Tile[] = [ 
     {text: 'Navi-left', cols: 1, rows: 4, color: 'lightblue'},
@@ -40,7 +47,39 @@ export class MemberMainComponent implements OnInit {
     {text: 'Remove', cols: 1, rows: 4, color: 'lightpink'},
     {text: 'Navi-right', cols: 1, rows: 4, color: 'lightblue'}
   ];
-  constructor(public auth: UserdataService,private library: FaIconLibrary) { }
+
+  Sections = of(undefined);
+  getAlldatesSubscription: Subscription;
+  getAlldatesBehaviourSub = new BehaviorSubject(undefined);
+
+  getAlldates = (Dates: AngularFirestoreDocument<allDates>) => {
+    if (this.getAlldatesSubscription !== undefined) {
+      this.getAlldatesSubscription.unsubscribe();
+    }
+    this.getAlldatesSubscription = Dates.valueChanges().subscribe((val: any) => {
+      if (val === undefined) {
+        this.getAlldatesBehaviourSub.next(undefined);
+      } else {
+        if (val.length === 0) {
+          this.getAlldatesBehaviourSub.next(null);
+        } else {
+          if (val.length !== 0) {
+            this.getAlldatesBehaviourSub.next(val);
+          }
+        }
+      }
+    });
+    return this.getAlldatesBehaviourSub;
+  };
+  Dates: BehaviorSubject<any>;
+  
+  constructor(public auth: UserdataService,  private db: AngularFirestore,private library: FaIconLibrary) {
+
+
+    this.Dates = this.getAlldates((this.db.doc('/testme/one-id')));
+console.log(this.Dates);
+
+   }
 
   ngOnInit(): void {
   }
