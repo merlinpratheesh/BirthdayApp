@@ -44,3 +44,21 @@
 
     transform: rotateY(180deg);
   }
+
+  .cdk-virtual-scroll-data-source-example .example-viewport {
+    height: 200px;
+    width: 800px;
+    border: 1px solid rgb(236, 232, 232);
+  }
+  
+  .cdk-virtual-scroll-data-source-example .example-viewport .cdk-virtual-scroll-content-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .cdk-virtual-scroll-data-source-example .example-item {
+    width: 50vw;
+    height: 100%;
+    writing-mode:horizontal-tb
+  }
+  

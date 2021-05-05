@@ -1,32 +1,28 @@
+
+
+<div *ngFor="let tile of 
+
+
+profile">
+
+    <img [src]="tile | async" alt="profile image" width="200" height="250">
+
+
+</div>
+
 <mat-card fxFlex.gt-xs="50vw" fxFlex.lt-sm="87.4vw" ngStyle.gt-xs="height: calc(100vh -64px)"
     ngStyle.lt-sm="height: calc(100vh -56px)">
     <mat-card-title fxLayoutAlign="center">Family Tree</mat-card-title>
     <mat-card-content fxLayout="column" fxLayoutGap="30px">
-        <mat-grid-list cols="8" rowHeight="fit" [gutterSize]="7" [style.height]="fitListHeight">
-            <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+        <mat-grid-list cols="8" rowHeight="fit" [gutterSize]="7" [style.height]="fitListHeight"  >
+            <mat-grid-tile *ngFor="let tile of tiles "  [colspan]="tile.cols" [rowspan]="tile.rows"
                 [style.background]="tile.color">
+                <div *ngIf="tile.text === 'man'  ||  tile.text === 'women'">
+                    <div  *ngFor= "let picture of profile"  >
+                        <img [src]="picture  | async" alt="profile image" width="100" height="150">
 
-
-                <div *ngIf="tile.text === 'man'  ||  tile.text === 'women'" class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <img *ngIf="tile.text === 'man'  ||  tile.text === 'women'" mat-card-lg-image
-                                src="./assets/{{tile.text}}.png">
-                        </div>
-                        <div *ngIf="this.Dates|async as dates ">
-                            <div *ngIf=" tile.text === 'man'  " class="flip-card-back">
-                                <h1> {{dates.father.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
-                                <h3> {{dates.father.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
-                                <h3> {{dates.father.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
-                            </div>
-                            <div *ngIf=" tile.text === 'women'  " class="flip-card-back">
-                                <h1> {{dates.mother.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
-                                <h3> {{dates.mother.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
-                                <h3> {{dates.mother.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
-                            </div>
-                            
-                        </div>
                     </div>
+                 
                 </div>
 
                 <fa-icon [fxShow]="tile.text === 'Navi-left'" [icon]="['fas', 'angle-double-left']"
@@ -36,49 +32,67 @@
             </mat-grid-tile>
         </mat-grid-list>
 
-        <mat-grid-list cols="17" rowHeight="fit" [gutterSize]="7" [style.height]="fitkidsHeight">
-            <mat-grid-tile *ngFor="let tile of tileskids" [colspan]="tile.cols" [rowspan]="tile.rows"
-                [style.background]="tile.color">
+        <div class="cdk-virtual-scroll-data-source-example">
+            <cdk-virtual-scroll-viewport orientation="horizontal" itemSize="50" class="example-viewport">
+
+                <mat-grid-list cols="20" rowHeight="fit" [gutterSize]="7" [style.height]="fitkidsHeight">
+
+                    <div *cdkVirtualFor="let tile of tileskids" class="example-item">
+
+                        <mat-grid-tile [colspan]="tile.cols" [rowspan]="tile.rows" [style.background]="tile.color">
+
+                            <div *ngIf="tile.text === 'boy'  ||  tile.text === 'girl' ||  tile.text === '3rdchild'"
+                                class="flip-card">
+                                <div class="flip-card-inner">
+                                    <div class="flip-card-front">
+
+                                        <img [fxHide]="tile.text === 'Navi-left' ||tile.text === 'Navi-right'   ||  tile.text === 'Add' || tile.text === 'Remove'"
+                                            mat-card-md-image src="./assets/{{tile.text}}.png">
+                                    </div>
+                                    <div *ngIf="this.Dates|async as dates ">
+                                        <div *ngIf=" tile.text === 'boy'  " class="flip-card-back">
+                                            <h1> {{dates.son.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
+                                            <h3> {{dates.son.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                                            <h3> {{dates.son.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                                        </div>
+                                        <div *ngIf=" tile.text === 'girl'  " class="flip-card-back">
+                                            <h1> {{dates.daughter.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
+                                            <h3> {{dates.daughter.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                                            <h3> {{dates.daughter.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                                        </div>
+                                        <div *ngIf=" tile.text === '3rdchild'  " class="flip-card-back">
+                                            <h1> {{dates.thirdchild.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
+                                            <h3> {{dates.thirdchild.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                                            <h3> {{dates.thirdchild.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
 
 
-                <div *ngIf="tile.text === 'boy'  ||  tile.text === 'girl' ||  tile.text === '3rdchild'" class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                                        </div>
 
-                            <img [fxHide]="tile.text === 'Navi-left' ||tile.text === 'Navi-right'   ||  tile.text === 'Add' || tile.text === 'Remove'"
-                                mat-card-md-image src="./assets/{{tile.text}}.png">
-                        </div>
-                        <div *ngIf="this.Dates|async as dates ">
-                            <div *ngIf=" tile.text === 'boy'  " class="flip-card-back">
-                                <h1> {{dates.son.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
-                                <h3> {{dates.son.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
-                                <h3> {{dates.son.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                                    </div>
+                                </div>
                             </div>
-                            <div *ngIf=" tile.text === 'girl'  " class="flip-card-back">
-                                <h1> {{dates.daughter.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
-                                <h3> {{dates.daughter.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
-                                <h3> {{dates.daughter.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
-                            </div>
-                            <div *ngIf=" tile.text === '3rdchild'  " class="flip-card-back">
-                                <h1> {{dates.thirdchild.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
-                                <h3> {{dates.thirdchild.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
-                                <h3> {{dates.thirdchild.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                            <fa-icon [fxShow]="tile.text === 'Navi-left'" [icon]="['fas', 'angle-double-left']"
+                                [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+                            <fa-icon [fxShow]="tile.text === 'Navi-right'" [icon]="['fas', 'angle-double-right']"
+                                [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
 
 
-                            </div>
 
-                        </div>
+                        </mat-grid-tile>
                     </div>
-                </div>
-                    <fa-icon [fxShow]="tile.text === 'Navi-left'" [icon]="['fas', 'angle-double-left']"
-                        [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
-                    <fa-icon [fxShow]="tile.text === 'Navi-right'" [icon]="['fas', 'angle-double-right']"
-                        [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+                </mat-grid-list>
 
-                
 
-            </mat-grid-tile>
-        </mat-grid-list>
+
+
+
+
+
+
+            </cdk-virtual-scroll-viewport>
+        </div>
+
+
         <mat-grid-list cols="4" rowHeight="fit" [gutterSize]="7" [style.height]="fitOptionsHeight">
             <mat-grid-tile *ngFor="let tile of tilesconrols" [colspan]="tile.cols" [rowspan]="tile.rows"
                 [style.background]="tile.color">
