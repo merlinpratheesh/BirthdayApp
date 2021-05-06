@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { Observable, of, merge, fromEvent } from 'rxjs';
+import { Observable, of, merge, fromEvent, BehaviorSubject } from 'rxjs';
 import { switchMap, first, map } from 'rxjs/operators';
 import Timestamp = firebase.firestore.Timestamp;
 import { Subject } from 'rxjs';
@@ -66,12 +66,10 @@ export class UserdataService implements CanActivate {
   isOnline$: Observable<boolean> = undefined;
   mypinitems: IGeometry[] = [];
 
-  communicateSource = new Subject();
 
-   communicateSourceHasNewMessage$= this.communicateSource.asObservable();
 
    myMethod$: Observable<any>;
-   private myMethodSubject = new Subject<any>();
+   private myMethodSubject = new BehaviorSubject<any>(this.myMethod);
 
 
 

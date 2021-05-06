@@ -1,7 +1,4 @@
 
-{{this.data|async }}
-
-
 
 <mat-card  fxLayout.lt-sm="column" fxLayout.gt-xs="row" fxFlex.gt-xs="50vw" fxFlex.lt-sm="87.4vw" fxLayoutAlign="center center" fxLayoutGap.lt-sm="8%"  ngStyle.gt-xs ="margin: 0px; padding: 0px; height: calc(100vh - 64px); overflow-y: hidden;">
     <div fxFlex.gt-xs="50%" fxLayout="column" ngStyle.lt-sm="padding: 3.5%" ngStyle.gt-xs="padding: 5%" fxLayoutGap.gt-xs="5%" fxLayoutGap.lt-sm="10%">
@@ -20,7 +17,7 @@
         <div fxLayout="row" fxLayoutAlign="center" >   
             <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%">
                 <mat-spinner [fxShow]="showspinner ? true : false"></mat-spinner>
-                <img mat-card-xl-image  src= "{{this.profilepicData}}" (load)="dosomething()"
+                <img mat-card-xl-image  src= "{{this.data|async}}" (load)="dosomething()"
                     alt="Photo of a User">
                 <mat-chip-list >
                     <mat-chip fxFlexAlign="center" color="warn" selected>Display Name!</mat-chip>

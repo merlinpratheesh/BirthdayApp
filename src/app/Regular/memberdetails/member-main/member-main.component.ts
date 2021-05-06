@@ -108,10 +108,10 @@ export class MemberMainComponent implements OnInit {
 
    send(some){
 
-    
+    this.router.navigate(['/profilepage']);
+
     this.myService.myMethod(some);
     console.log(some);
-    this.router.navigate(['/profilepage']);
 
 
     }
