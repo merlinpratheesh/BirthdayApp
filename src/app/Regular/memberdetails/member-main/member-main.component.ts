@@ -34,10 +34,10 @@ export class MemberMainComponent implements OnInit {
     {text: 'Title', cols: 6, rows: 1, color: ''},
     {text: 'Title Gap', cols: 1, rows: 1, color: ''},
 
-    {text: 'Navi-left', cols: 1, rows: 4, color: ''},
-    {text: 'man', cols: 3, rows: 4, color: 'lightgreen'},
-    {text: 'women', cols: 3, rows: 4, color: 'lightpink'},
-    {text: 'Navi-right', cols: 1, rows: 4, color: ''}];
+    {text: 'father', cols: 3, rows: 4, color: 'lightgreen'},
+    {text: 'mother', cols: 3, rows: 4, color: 'lightgreen'},
+
+];
 
   tileskids: Tile[] = [ 
     {text: 'Navi-left', cols: 1, rows: 4, color: ''},

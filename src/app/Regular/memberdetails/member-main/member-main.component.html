@@ -1,36 +1,41 @@
-
-
-<div *ngFor="let tile of 
-
-
-profile">
-
-    <img [src]="tile | async" alt="profile image" width="200" height="250">
-
-
-</div>
-
 <mat-card fxFlex.gt-xs="50vw" fxFlex.lt-sm="87.4vw" ngStyle.gt-xs="height: calc(100vh -64px)"
     ngStyle.lt-sm="height: calc(100vh -56px)">
     <mat-card-title fxLayoutAlign="center">Family Tree</mat-card-title>
     <mat-card-content fxLayout="column" fxLayoutGap="30px">
-        <mat-grid-list cols="8" rowHeight="fit" [gutterSize]="7" [style.height]="fitListHeight"  >
-            <mat-grid-tile *ngFor="let tile of tiles "  [colspan]="tile.cols" [rowspan]="tile.rows"
-                [style.background]="tile.color">
-                <div *ngIf="tile.text === 'man'  ||  tile.text === 'women'">
-                    <div  *ngFor= "let picture of profile"  >
-                        <img [src]="picture  | async" alt="profile image" width="100" height="150">
 
+
+
+        <mat-grid-list fxLayoutAlign="center" cols="8" rowHeight="25vh" [style.height]="fitListHeight"
+            style="background-color:white">
+            <mat-grid-tile *ngFor="let picture of profile" colspan="3" rowHeight='50vh'
+                style="background-color:lightgreen; margin-left: 70px; ">
+                <fa-icon [icon]="['fas', 'angle-double-left']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x">
+                </fa-icon>
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <img [src]="picture  | async" alt="profile image" width="100" height="100">
+                        </div>
+                        <div *ngIf="this.Dates|async as dates ">
+                            <div *ngIf="dates.father.relationship === 'father'" class=" flip-card-back">
+                                <h1> {{dates.father.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
+                                <h3> {{dates.father.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                                <h3> {{dates.father.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                            </div>
+                            <div *ngIf="dates.mother.relationship === 'mother'" class=" flip-card-back">
+                                <h1> {{dates.mother.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
+                                <h3> {{dates.mother.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                                <h3> {{dates.mother.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
+                            </div>
+                        </div>
                     </div>
-                 
                 </div>
+                <fa-icon [icon]="['fas', 'angle-double-right']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x">
+                </fa-icon>
 
-                <fa-icon [fxShow]="tile.text === 'Navi-left'" [icon]="['fas', 'angle-double-left']"
-                    [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
-                <fa-icon [fxShow]="tile.text === 'Navi-right'" [icon]="['fas', 'angle-double-right']"
-                    [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
             </mat-grid-tile>
         </mat-grid-list>
+
 
         <div class="cdk-virtual-scroll-data-source-example">
             <cdk-virtual-scroll-viewport orientation="horizontal" itemSize="50" class="example-viewport">
