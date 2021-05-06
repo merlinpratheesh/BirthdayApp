@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { allDates, UserdataService } from 'src/app/service/userdata.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage'
+import { Router } from '@angular/router';
 
 
 
@@ -85,7 +86,7 @@ export class MemberMainComponent implements OnInit {
 
 
   
-  constructor(public auth: UserdataService, private storage: AngularFireStorage,  private db: AngularFirestore,private library: FaIconLibrary) {
+  constructor(public myService: UserdataService, private ChangeDetector: ChangeDetectorRef, private router: Router,private storage: AngularFireStorage,  private db: AngularFirestore,private library: FaIconLibrary) {
 
     this.Dates = this.getAlldates((this.db.doc('/testme/one-id')));
     console.log(this.Dates);
@@ -97,7 +98,6 @@ export class MemberMainComponent implements OnInit {
     this.profileUrl = ref.getDownloadURL();
     this.profileUrl1 = ref1.getDownloadURL();
 
-    console.log(this.profileUrl );
 
      this.profile=[this.profileUrl,this.profileUrl1]
     console.log(this.profile);
@@ -106,7 +106,15 @@ export class MemberMainComponent implements OnInit {
   
    }
 
+   send(some){
 
+    
+    this.myService.myMethod(some);
+    console.log(some);
+    this.router.navigate(['/profilepage']);
+
+
+    }
 
   ngOnInit(): void {
   }

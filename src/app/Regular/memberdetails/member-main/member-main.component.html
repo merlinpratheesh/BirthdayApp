@@ -11,13 +11,16 @@
                 style="background-color:lightgreen; margin-left: 70px; ">
                 <fa-icon [icon]="['fas', 'angle-double-left']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x">
                 </fa-icon>
-                <div class="flip-card">
+                <div class="flip-card" (click)="send(picture)" >
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
-                            <img [src]="picture  | async" alt="profile image" width="100" height="100">
+                            <img [src]="picture  | async"    alt="profile image" width="100" height="100">
+                        
+                        {{picture |async}}
+
                         </div>
                         <div *ngIf="this.Dates|async as dates ">
-                            <div *ngIf="dates.father.relationship === 'father'" class=" flip-card-back">
+                            <div  *ngIf="dates.father.relationship === 'father'" class=" flip-card-back">
                                 <h1> {{dates.father.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
                                 <h3> {{dates.father.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
                                 <h3> {{dates.father.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
@@ -65,7 +68,7 @@
                                             <h3> {{dates.daughter.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
                                             <h3> {{dates.daughter.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>
                                         </div>
-                                        <div *ngIf=" tile.text === '3rdchild'  " class="flip-card-back">
+                                        <div   *ngIf=" tile.text === '3rdchild'  " class="flip-card-back">
                                             <h1> {{dates.thirdchild.DOB?.toDate() | date:'dd-MM-yyyy'}}</h1>
                                             <h3> {{dates.thirdchild.Anniv?.toDate() | date:'dd-MM-yyyy'}}</h3>
                                             <h3> {{dates.thirdchild.DOD?.toDate() | date:'dd-MM-yyyy'}}</h3>

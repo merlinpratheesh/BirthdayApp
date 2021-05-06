@@ -4,17 +4,17 @@ import { User } from 'src/app/service/userdata.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
-import {  ChangeDetectionStrategy } from '@angular/core';
-import {MatCalendar} from '@angular/material/datepicker';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, MAT_DATE_LOCALE} from '@angular/material/core';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { MatCalendar } from '@angular/material/datepicker';
+import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import moment from 'moment';
-import { CountryISO,SearchCountryField, TooltipLabel,  } from '@wenor/ngx-intl-tel-input';
+import { CountryISO, SearchCountryField, TooltipLabel, } from '@wenor/ngx-intl-tel-input';
 
-import {FormBuilder , FormGroup, FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
+import { FormBuilder, FormGroup, FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -23,7 +23,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 export const MY_FORMATS = {
-  
+
   parse: {
     dateInput: 'DD/MMM',
   },
@@ -44,11 +44,11 @@ export enum RecordingState {
   FORBIDDEN = 'forbidden',
 }
 
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import { ElementRef, Input, Optional, Self} from '@angular/core';
-import { ControlValueAccessor, NgControl, ValidatorFn, ValidationErrors} from '@angular/forms';
-import {MatFormFieldControl} from '@angular/material/form-field';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ElementRef, Input, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { UserdataService } from 'src/app/service/userdata.service';
 
 export const checkprofilepage: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
@@ -60,15 +60,16 @@ export const checkprofilepage: ValidatorFn = (control: FormGroup): ValidationErr
 @Component({
   selector: 'app-profile-main',
   templateUrl: './profile-main.component.html',
-  styleUrls: ['./profile-main.component.scss']
+  styleUrls: ['./profile-main.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileMainComponent implements OnInit , OnDestroy {
-  disableOk= true;
+export class ProfileMainComponent implements OnInit, OnDestroy {
+  disableOk = true;
   showspinner = true;
   name: string;
   mylocaluser: User = null;
   imageStr = 'https://raw.githubusercontent.com/gmanojisaac/familybookMay/master/src/assets/girl.png';
-  
+
   audiodialogRef: any;
   videodialogRef: any;
   impdatesdialogRef: any;
@@ -78,7 +79,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
   profileForm = this.formBuilder.group({
     DisplayName: [null, [Validators.required]],
     MyPhoneNum: this.formBuilder.group({
-      countryCode : [null, [Validators.required]],
+      countryCode: [null, [Validators.required]],
       dialCode: [null, [Validators.required]],
       id: [null, [Validators.required]],
       internationalNumber: [null, [Validators.required]],
@@ -86,22 +87,45 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
       number: [null, [Validators.required]]
     })
   }, { validators: checkprofilepage });
-  constructor(public formBuilder: FormBuilder, public auth: UserdataService,public dialog: MatDialog) {
+  profilepic: any;
+  profilepicData: any;
+  profile: Subject<unknown>;
+  public data: Array<any>;
+  constructor(public formBuilder: FormBuilder, private ref: ChangeDetectorRef, public auth: UserdataService, public dialog: MatDialog) {
 
-   }
-  ngOnInit(): void {
+    this.auth.myMethod$.subscribe((data) => {
+
+      if (data === null || data === undefined) {
+        console.log(data);
+      }
+      else {
+        this.data = data; // And he have data here too!
+        console.log(data);
+
+
+      }
+
+
+    }
+    );
+
 
   }
-  ngOnDestroy(){
-    if(this.audiodialogRef !== null && this.audiodialogRef !== undefined){
+  ngOnInit() {
+
+
+
+  }
+  ngOnDestroy() {
+    if (this.audiodialogRef !== null && this.audiodialogRef !== undefined) {
       this.audiodialogRef.close();
-    }   
-    if(this.videodialogRef !== null && this.videodialogRef !== undefined){
+    }
+    if (this.videodialogRef !== null && this.videodialogRef !== undefined) {
       this.videodialogRef.close();
-    }   
+    }
   }
-  openDialogPictures(){
-  this.videodialogRef = this.dialog.open(PicturesComponent, {
+  openDialogPictures() {
+    this.videodialogRef = this.dialog.open(PicturesComponent, {
       data: this.mylocaluser,
       backdropClass: 'backdropBackground'
     });
@@ -109,33 +133,33 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
     this.videodialogRef.afterClosed().subscribe(result => {
     });
   }
-  openDialogDates()  {
+  openDialogDates() {
     this.impdatesdialogRef = this.dialog.open(DatepickerComponent, {
       data: this.mylocaluser,
       backdropClass: 'backdropBackground'
     });
   }
-  openDialogGender()  {
+  openDialogGender() {
     this.genderdialogRef = this.dialog.open(GenderComponent, {
       data: this.mylocaluser,
       backdropClass: 'backdropBackground'
     });
   }
-  openDialogRelation()  {
+  openDialogRelation() {
     this.relationdialogRef = this.dialog.open(RelationshipComponent, {
       data: this.mylocaluser,
       backdropClass: 'backdropBackground'
     });
   }
-  openDialogContact()  {
+  openDialogContact() {
     this.contactdialogRef = this.dialog.open(DetailsComponent, {
       data: this.mylocaluser,
       backdropClass: 'backdropBackground'
     });
 
     this.contactdialogRef.afterClosed().subscribe(result => {
-      if(result !== null && result !== undefined ){
-        const myobj= result.MyPhonenum as FormGroup;
+      if (result !== null && result !== undefined) {
+        const myobj = result.MyPhonenum as FormGroup;
         this.profileForm.patchValue(
           {
             ...result,
@@ -146,14 +170,13 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
     });
   }
 
-  openDialogGreeting(){
+  openDialogGreeting() {
     this.audiodialogRef = this.dialog.open(AudioComponent, {
-        data: this.mylocaluser,
-        backdropClass: 'backdropBackground'
-      });
+      data: this.mylocaluser,
+      backdropClass: 'backdropBackground'
+    });
 
-    this.audiodialogRef.afterClosed().subscribe(result => 
-    {
+    this.audiodialogRef.afterClosed().subscribe(result => {
 
     });
   }
@@ -165,7 +188,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
 
 @Component({
   selector: 'app-header-details',
-  styles:[`  
+  styles: [`  
   `],
   template: `
 
@@ -210,50 +233,50 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
     
     `
 })
-export class DetailsComponent  implements OnInit  {
+export class DetailsComponent implements OnInit {
   separateDialCode = true;
-	SearchCountryField = SearchCountryField;
-	TooltipLabel = TooltipLabel;
+  SearchCountryField = SearchCountryField;
+  TooltipLabel = TooltipLabel;
 
-	CountryISO = CountryISO;
-	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
-	phoneForm = new FormGroup({
-		phone: new FormControl(undefined, [Validators.required])
-	});
+  CountryISO = CountryISO;
+  preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
+  phoneForm = new FormGroup({
+    phone: new FormControl(undefined, [Validators.required])
+  });
 
 
   myForm: FormGroup;
-  settingMsg= 'Your Name';
+  settingMsg = 'Your Name';
   disableback: false;
 
   matcher = new MyErrorStateMatcher();
   changePreferredCountries() {
-		this.preferredCountries = [CountryISO.India, CountryISO.Canada];
+    this.preferredCountries = [CountryISO.India, CountryISO.Canada];
   }
-  
-  onCountryChange($event){
+
+  onCountryChange($event) {
     console.log($event);
   }
-  getNameErrorMessage(){
-    if(this.myForm.get('DisplayName').hasError('required')){
+  getNameErrorMessage() {
+    if (this.myForm.get('DisplayName').hasError('required')) {
       return 'You must enter a value';
-    } 
-    return this.myForm.get('DisplayName').hasError('minlength') ? '3 digits required': '';
+    }
+    return this.myForm.get('DisplayName').hasError('minlength') ? '3 digits required' : '';
   }
-  getPhErrorMessage(){
-    if(this.myForm.get('MyPhonenum').hasError('required')){
+  getPhErrorMessage() {
+    if (this.myForm.get('MyPhonenum').hasError('required')) {
       return 'You must enter a value';
-    } 
-    if(this.myForm.get('MyPhonenum').hasError('maxlength')){
+    }
+    if (this.myForm.get('MyPhonenum').hasError('maxlength')) {
       return 'You must enter 10 digits only';
-    } 
+    }
     return this.myForm.get('MyPhonenum').hasError('minlength') ? 'Atleast 10 digits required' : '';
   }
-  ngOnInit(){
+  ngOnInit() {
     this.myForm = this.formBuilder.group({
       MyPhonenum: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       DisplayName: ['', [Validators.required, Validators.minLength(3)]]
-    });  
+    });
     this.onChanges();
   }
   onChanges(): void {
@@ -262,18 +285,18 @@ export class DetailsComponent  implements OnInit  {
     });
   }
   // tslint:disable-next-line: max-line-length
-  constructor(public dialogRef: MatDialogRef<DetailsComponent>, private formBuilder: FormBuilder){
+  constructor(public dialogRef: MatDialogRef<DetailsComponent>, private formBuilder: FormBuilder) {
 
   }
 
-  ontask(){
+  ontask() {
     this.myForm.patchValue(
-      { MyPhonenum : this.phoneForm.get('phone').value}
+      { MyPhonenum: this.phoneForm.get('phone').value }
     );
     //console.log('form value', this.myForm.value);
     this.dialogRef.close(this.myForm.getRawValue());
   }
-  goback(){
+  goback() {
     this.dialogRef.close();
   }
 
@@ -281,7 +304,7 @@ export class DetailsComponent  implements OnInit  {
 
 @Component({
   selector: 'dialog-audio',
-  template:`
+  template: `
   <mat-card fxFlex ngStyle.lt-sm="background:gold; height: 40vh; width: 65vw;" ngStyle.gt-xs="background:gold; height: 40vh; width: 30vw;" fxLayout="column" fxLayoutAlign="space-around center">
     <mat-card-title>{{settingMsg}}</mat-card-title>  
     <audio *ngFor="let audio of audioFiles" ngStyle.lt-sm="width: 50vw" controls='true' [src]="audio" (error) = "connectionerror()">
@@ -319,42 +342,54 @@ export class AudioComponent implements OnInit, OnDestroy {
   imageFile: any;
   savetoDB: User;
 
-  constructor(private cd: ChangeDetectorRef, private dom: DomSanitizer,private storage: AngularFireStorage, private afs: AngularFirestore,
-              public dialogRef: MatDialogRef<AudioComponent>, @Inject(MAT_DIALOG_DATA) public data: User) {
-      this.state = RecordingState.STOPPED;
-      if (data.downloadaudioURL !== null) {
-        this.audioFiles.push(data.downloadaudioURL);
-        //console.log('hi',data.downloadaudioURL);
-        this.playgreeting();
-      } else {
-        const mediaConstraints = {
-          video: false,
-          audio: true
-        };
-        navigator.mediaDevices
-          .getUserMedia(mediaConstraints)
-          .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
-        this.recordgreeting();
-      } 
-    }
-    ngOnInit(){
-
-      /*const mediaConstraints = {
+  constructor(private cd: ChangeDetectorRef, private dom: DomSanitizer, private storage: AngularFireStorage, private afs: AngularFirestore,
+    public dialogRef: MatDialogRef<AudioComponent>, @Inject(MAT_DIALOG_DATA) public data: User) {
+    this.state = RecordingState.STOPPED;
+    if (data.downloadaudioURL !== null) {
+      this.audioFiles.push(data.downloadaudioURL);
+      //console.log('hi',data.downloadaudioURL);
+      this.playgreeting();
+    } else {
+      const mediaConstraints = {
         video: false,
         audio: true
       };
       navigator.mediaDevices
         .getUserMedia(mediaConstraints)
-        .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));*/
+        .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
+      this.recordgreeting();
     }
-    ngOnDestroy(){
-      if(this.chunks !== null){
-        this.chunks.pop();
-      }// save local mem if possible      
-    }
-    recordgreeting() {
-      navigator.permissions.query({ name: 'microphone' }).then((result) => {
-        console.log('result', result.state);
+  }
+  ngOnInit() {
+
+    /*const mediaConstraints = {
+      video: false,
+      audio: true
+    };
+    navigator.mediaDevices
+      .getUserMedia(mediaConstraints)
+      .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));*/
+  }
+  ngOnDestroy() {
+    if (this.chunks !== null) {
+      this.chunks.pop();
+    }// save local mem if possible      
+  }
+  recordgreeting() {
+    navigator.permissions.query({ name: 'microphone' }).then((result) => {
+      console.log('result', result.state);
+      switch (result.state) {
+        case 'granted':
+          this.showgranted();
+          break;
+        case 'prompt':
+          this.showprompt();
+          break;
+        case 'denied':
+          this.showdenied();
+          break;
+      }
+      result.onchange = (event) => {
         switch (result.state) {
           case 'granted':
             this.showgranted();
@@ -366,163 +401,150 @@ export class AudioComponent implements OnInit, OnDestroy {
             this.showdenied();
             break;
         }
-        result.onchange = (event) => {
-          switch (result.state) {
-            case 'granted':
-              this.showgranted();
-              break;
-            case 'prompt':
-              this.showprompt();
-              break;
-            case 'denied':
-              this.showdenied();
-              break;
-          }
-        };
-      });
-    }
-    playgreeting() {
-
-      this.settingMsg = 'Play your Voice Greeting';
-  
-      this.showmicrophone = false;
-      this.disablemicrophone = true;
-  
-      this.showspinner = false;
-  
-      this.showbutton = true;
-      this.disablebutton = false;
-      this.AudioOption = 'Delete';
-  
-      this.disableback = false;
-    }
-  
-    savegreeting() {
-      this.settingMsg = 'Save your Voice Greeting';
-  
-      this.showmicrophone = false;
-      this.disablemicrophone = true;
-  
-      this.showspinner = false;
-  
-      this.showbutton = true;
-      this.disablebutton = false;
-      this.AudioOption = 'Save';
-  
-      this.disableback = false;
-  
-    }
-    showprompt() {
-      this.settingMsg = 'Set Microphone settings';
-  
-      this.showmicrophone = true;
-      this.disablemicrophone = true;
-  
-      this.showspinner = false;
-  
-      this.showbutton = true;
-      this.disablebutton = false;
-      this.AudioOption = 'Settings';
-  
-      this.disableback = false;
-  
-    }
-    showgranted() {
-      this.settingMsg = 'Record Greeting!';
-  
-      this.showmicrophone = true;
-      this.disablemicrophone = false;
-  
-      this.showspinner = false;
-  
-      this.showbutton = false;
-      this.disablebutton = false;
-      this.AudioOption = 'Settings';
-  
-      this.disableback = false;
-    }
-    showdenied() {
-      this.settingMsg = 'Microphone Setting is denied';
-  
-      this.showmicrophone = true;
-      this.disablemicrophone = true;
-  
-      this.showspinner = false;
-  
-      this.showbutton = false;
-      this.disablebutton = false;
-      this.AudioOption = 'Settings';
-  
-      this.disableback = false;
-    }
-    showSettings() {
-      const mediaConstraints = {
-        video: false,
-        audio: true
       };
-      navigator.mediaDevices
-        .getUserMedia(mediaConstraints);
-      return;
-    } 
-    connectionerror() {
-      this.disablebutton = true;
-      alert('Uh-oh, Connection Issue, Check Internet connection1');
-    }
-    showError() {
-      this.settingMsg = 'Your Audio- Error';
-  
-      this.showspinner = false;
-  
-      this.showbutton = false;
-      this.disablebutton = false;
-      this.AudioOption = 'Settings';
-  
-      this.disableback = false;
-  
-      alert('Uh-oh, Connection Issue, Check Internet connection2');
-    }    
-    startRecording() {
+    });
+  }
+  playgreeting() {
 
-      if (this.state === RecordingState.STOPPED) {//start recording
-        this.mediaRecorder.start();
-        this.disableback = true;
-        this.state = RecordingState.RECORDING;
-        this.seconds = 9;        
-        this.clearTimer();
-        this.intervalId = window.setInterval(() => {
-          this.seconds -= 1;
-                     
-          if (this.seconds === 0) {
-            console.log('stopped first:',  this.mediaRecorder.state); 
-            this.state = RecordingState.STOPPED;
-            this.mediaRecorder.stop();
-            window.clearInterval( this.intervalId);
-            this.savegreeting();
-            return;
-          }
-        }, 1000);
-      } else { //pressed again
-        this.state = RecordingState.STOPPED;
-        if (this.seconds !== 0) {
-          this.savegreeting();
-          window.clearInterval( this.intervalId);      
+    this.settingMsg = 'Play your Voice Greeting';
+
+    this.showmicrophone = false;
+    this.disablemicrophone = true;
+
+    this.showspinner = false;
+
+    this.showbutton = true;
+    this.disablebutton = false;
+    this.AudioOption = 'Delete';
+
+    this.disableback = false;
+  }
+
+  savegreeting() {
+    this.settingMsg = 'Save your Voice Greeting';
+
+    this.showmicrophone = false;
+    this.disablemicrophone = true;
+
+    this.showspinner = false;
+
+    this.showbutton = true;
+    this.disablebutton = false;
+    this.AudioOption = 'Save';
+
+    this.disableback = false;
+
+  }
+  showprompt() {
+    this.settingMsg = 'Set Microphone settings';
+
+    this.showmicrophone = true;
+    this.disablemicrophone = true;
+
+    this.showspinner = false;
+
+    this.showbutton = true;
+    this.disablebutton = false;
+    this.AudioOption = 'Settings';
+
+    this.disableback = false;
+
+  }
+  showgranted() {
+    this.settingMsg = 'Record Greeting!';
+
+    this.showmicrophone = true;
+    this.disablemicrophone = false;
+
+    this.showspinner = false;
+
+    this.showbutton = false;
+    this.disablebutton = false;
+    this.AudioOption = 'Settings';
+
+    this.disableback = false;
+  }
+  showdenied() {
+    this.settingMsg = 'Microphone Setting is denied';
+
+    this.showmicrophone = true;
+    this.disablemicrophone = true;
+
+    this.showspinner = false;
+
+    this.showbutton = false;
+    this.disablebutton = false;
+    this.AudioOption = 'Settings';
+
+    this.disableback = false;
+  }
+  showSettings() {
+    const mediaConstraints = {
+      video: false,
+      audio: true
+    };
+    navigator.mediaDevices
+      .getUserMedia(mediaConstraints);
+    return;
+  }
+  connectionerror() {
+    this.disablebutton = true;
+    alert('Uh-oh, Connection Issue, Check Internet connection1');
+  }
+  showError() {
+    this.settingMsg = 'Your Audio- Error';
+
+    this.showspinner = false;
+
+    this.showbutton = false;
+    this.disablebutton = false;
+    this.AudioOption = 'Settings';
+
+    this.disableback = false;
+
+    alert('Uh-oh, Connection Issue, Check Internet connection2');
+  }
+  startRecording() {
+
+    if (this.state === RecordingState.STOPPED) {//start recording
+      this.mediaRecorder.start();
+      this.disableback = true;
+      this.state = RecordingState.RECORDING;
+      this.seconds = 9;
+      this.clearTimer();
+      this.intervalId = window.setInterval(() => {
+        this.seconds -= 1;
+
+        if (this.seconds === 0) {
+          console.log('stopped first:', this.mediaRecorder.state);
+          this.state = RecordingState.STOPPED;
           this.mediaRecorder.stop();
+          window.clearInterval(this.intervalId);
+          this.savegreeting();
+          return;
         }
+      }, 1000);
+    } else { //pressed again
+      this.state = RecordingState.STOPPED;
+      if (this.seconds !== 0) {
+        this.savegreeting();
+        window.clearInterval(this.intervalId);
+        this.mediaRecorder.stop();
       }
     }
-    mediaerror() {
-      this.showError();
-    }
-    clearTimer() {
-      clearInterval(this.intervalId);
-    }
-    mediaavialable(stream)
-  {
+  }
+  mediaerror() {
+    this.showError();
+  }
+  clearTimer() {
+    clearInterval(this.intervalId);
+  }
+  mediaavialable(stream) {
     this.mediaRecorder = new MediaRecorder(stream);
     this.streamRef = stream;
     this.mediaRecorder.onstop = e => {
-     
-      const blob = new Blob(this.chunks, {type: 'audio/ogg; codecs=opus'});
+
+      const blob = new Blob(this.chunks, { type: 'audio/ogg; codecs=opus' });
       this.chunks = [];
       const audioURL = URL.createObjectURL(blob);
       // audio.src = audioURL;
@@ -532,121 +554,121 @@ export class AudioComponent implements OnInit, OnDestroy {
       this.cd.detectChanges();
       const imageName = this.data.uid;
       this.imageFile = new File([blob], imageName, { type: 'audio/ogg; codecs=opus' });
-      
+
     };
     this.mediaRecorder.ondataavailable = e => {
       this.chunks.push(e.data);
     };
-  }     
-    onNoClick(): void {
-      this.dialogRef.close();
+  }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  goback() {
+    if (this.chunks !== null) {
+      this.chunks.pop();
     }
-    goback(){
-      if(this.chunks !== null){
-        this.chunks.pop();
-      }
-      this.dialogRef.close(this.data);
-    }
-    async ontask() {
-      switch (this.AudioOption) {
-        case 'Settings':
-          this.showSettings();
-          break;
-  
-        case 'Delete':
-          this.settingMsg = 'Deleting...';
-  
-          //audio option is pushed
-          this.showspinner = true;
-  
-          this.showbutton = false;
-          this.disablebutton = false;
-          this.AudioOption = 'Delete';
-  
-          this.disableback = true;
-          switch (await this.deleteOps()) {
-            case true:
-              this.data.downloadaudioURL = '';
-              this.audioFiles.pop();
-              const mediaConstraints = {
-                video: false,
-                audio: true
-              };
-              navigator.mediaDevices
-                .getUserMedia(mediaConstraints)
-                .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
-              this.recordgreeting();
-              break;
-            case false:
-              this.showError();
-              break;
-          }
+    this.dialogRef.close(this.data);
+  }
+  async ontask() {
+    switch (this.AudioOption) {
+      case 'Settings':
+        this.showSettings();
+        break;
 
-          break;
-        case 'Save':
-          this.settingMsg = 'Saving...';
-  
-          this.showspinner = true;
-  
-          this.showbutton = false;
-          this.disablebutton = false;
-          this.AudioOption = 'Delete';
-  
-          this.disableback = true;
-          switch (await this.saveOps()) {
-            case true:
-              this.data.downloadaudioURL = this.savetoDB.downloadaudioURL;            
+      case 'Delete':
+        this.settingMsg = 'Deleting...';
 
-              this.playgreeting();
-              break;
-            case false:
-              this.showError();
-              break;
-          }
-          break;
-      }
-    }
-    async deleteOps() {
-      const ref = this.afs.firestore.collection('users').doc(`${this.data.uid}`);
-      try {
-        await this.storage.storage.refFromURL(this.data.downloadaudioURL).delete();
-        await this.afs.firestore.runTransaction(transaction =>
-          transaction.get(ref).then(sfdoc => {
-            this.savetoDB = sfdoc.data() as User;
-            this.savetoDB.downloadaudioURL = null;
-            transaction.update(ref, this.savetoDB);
-          })
-        );
-        return true;
-      } catch (error) {
-        return false;
-      }
-    }
-    async saveOps() {
-      const ref = this.afs.firestore.collection('users').doc(`${this.data.uid}`);
-      try {
-        const uploadURL = await this.storage.upload(`audio/${this.data.uid}`, this.imageFile);
-        await this.afs.firestore.runTransaction(transaction =>
-          transaction.get(ref).then(async sfdoc => {
-            this.savetoDB = sfdoc.data() as User;
-            this.savetoDB.downloadaudioURL = await uploadURL.ref.getDownloadURL();
-            this.data.downloadaudioURL = this.savetoDB.downloadaudioURL;
+        //audio option is pushed
+        this.showspinner = true;
+
+        this.showbutton = false;
+        this.disablebutton = false;
+        this.AudioOption = 'Delete';
+
+        this.disableback = true;
+        switch (await this.deleteOps()) {
+          case true:
+            this.data.downloadaudioURL = '';
             this.audioFiles.pop();
-            this.chunks.pop();
-            this.audioFiles.push(this.data.downloadaudioURL);
-            transaction.update(ref, this.savetoDB);
-          })
-        );
-        return true;
-      } catch (error) {
-        return false;
-      }
+            const mediaConstraints = {
+              video: false,
+              audio: true
+            };
+            navigator.mediaDevices
+              .getUserMedia(mediaConstraints)
+              .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
+            this.recordgreeting();
+            break;
+          case false:
+            this.showError();
+            break;
+        }
+
+        break;
+      case 'Save':
+        this.settingMsg = 'Saving...';
+
+        this.showspinner = true;
+
+        this.showbutton = false;
+        this.disablebutton = false;
+        this.AudioOption = 'Delete';
+
+        this.disableback = true;
+        switch (await this.saveOps()) {
+          case true:
+            this.data.downloadaudioURL = this.savetoDB.downloadaudioURL;
+
+            this.playgreeting();
+            break;
+          case false:
+            this.showError();
+            break;
+        }
+        break;
     }
+  }
+  async deleteOps() {
+    const ref = this.afs.firestore.collection('users').doc(`${this.data.uid}`);
+    try {
+      await this.storage.storage.refFromURL(this.data.downloadaudioURL).delete();
+      await this.afs.firestore.runTransaction(transaction =>
+        transaction.get(ref).then(sfdoc => {
+          this.savetoDB = sfdoc.data() as User;
+          this.savetoDB.downloadaudioURL = null;
+          transaction.update(ref, this.savetoDB);
+        })
+      );
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+  async saveOps() {
+    const ref = this.afs.firestore.collection('users').doc(`${this.data.uid}`);
+    try {
+      const uploadURL = await this.storage.upload(`audio/${this.data.uid}`, this.imageFile);
+      await this.afs.firestore.runTransaction(transaction =>
+        transaction.get(ref).then(async sfdoc => {
+          this.savetoDB = sfdoc.data() as User;
+          this.savetoDB.downloadaudioURL = await uploadURL.ref.getDownloadURL();
+          this.data.downloadaudioURL = this.savetoDB.downloadaudioURL;
+          this.audioFiles.pop();
+          this.chunks.pop();
+          this.audioFiles.push(this.data.downloadaudioURL);
+          transaction.update(ref, this.savetoDB);
+        })
+      );
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
 @Component({
   selector: 'dialog-picture',
-  template:`
+  template: `
     <mat-card ngStyle.lt-sm="background:gold; height: 58vh; width: 69vw;" ngStyle.gt-xs="background:gold;  height: 56vh; width: 27vw;" fxFlex  fxLayout="column" fxLayoutAlign="center center">
     
     <mat-card-title >{{settingMsg}}</mat-card-title>  
@@ -664,8 +686,7 @@ export class AudioComponent implements OnInit, OnDestroy {
     </mat-card> 
   `
 })
-export class PicturesComponent
-{
+export class PicturesComponent {
   state: RecordingState;
   imagesrc: string = null;
   disablebutton: boolean;
@@ -694,26 +715,26 @@ export class PicturesComponent
   canvasElement: any;
   context: any;
   videoElement: HTMLVideoElement;
-  videostreamRef= null;
+  videostreamRef = null;
   savetoDB: User;
   settingMsg = 'Change Profile Image!';
   constructor(
     // tslint:disable-next-line: max-line-length
     public dialogRef: MatDialogRef<PicturesComponent>, private dom: DomSanitizer, private storage: AngularFireStorage, private afs: AngularFirestore,
-    @Inject(MAT_DIALOG_DATA) public data: User){
-      if (data.customphotoURL !== null) { //second login
-        this.imagesrc = data.customphotoURL; 
-        this.showcamera = true;
-        this.recordgreeting();
-      } else { //first time
-        this.imagesrc = data.photoURL; 
-        this.showimage = true;
-        this.playgreeting();
-      } 
+    @Inject(MAT_DIALOG_DATA) public data: User) {
+    if (data.customphotoURL !== null) { //second login
+      this.imagesrc = data.customphotoURL;
+      this.showcamera = true;
+      this.recordgreeting();
+    } else { //first time
+      this.imagesrc = data.photoURL;
+      this.showimage = true;
+      this.playgreeting();
     }
-    AfterVideoLoad(){
-      this.showspinner = false;
-    }
+  }
+  AfterVideoLoad() {
+    this.showspinner = false;
+  }
 
   recordgreeting() {
     navigator.permissions.query({ name: 'camera' }).then((result) => {
@@ -839,9 +860,9 @@ export class PicturesComponent
   async saveOps() {
     const img = this.canvasElement.toDataURL();
     let byteString;
-    if (img.split(',')[0].indexOf('base64') >= 0){
+    if (img.split(',')[0].indexOf('base64') >= 0) {
       byteString = atob(img.split(',')[1]);
-    } else{
+    } else {
       byteString = unescape(img.split(',')[1]);
     }
     // separate out the mime component
@@ -849,12 +870,12 @@ export class PicturesComponent
     // write the bytes of the string to a typed array
     const ia = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
+      ia[i] = byteString.charCodeAt(i);
     }
 
     const ref = this.afs.firestore.collection('users').doc(`${this.data.uid}`);
     try {
-      const uploadURL = await this.storage.upload(`image/${this.data.uid}`, new Blob([ia], {type: mimeString}));
+      const uploadURL = await this.storage.upload(`image/${this.data.uid}`, new Blob([ia], { type: mimeString }));
       await this.afs.firestore.runTransaction(transaction =>
         transaction.get(ref).then(async sfdoc => {
           this.savetoDB = sfdoc.data() as User;
@@ -892,7 +913,7 @@ export class PicturesComponent
         break;
 
       case 'Change':
-        if(this.data.customphotoURL === null){
+        if (this.data.customphotoURL === null) {
           this.recordgreeting();
           return;
         }
@@ -925,10 +946,10 @@ export class PicturesComponent
         this.showcanvas = false;
         this.showcamera = false;
         this.disableback = true;
-        this.canvas.nativeElement.style.display = 'none';    
+        this.canvas.nativeElement.style.display = 'none';
         switch (await this.saveOps()) {
           case true:
-                    
+
             this.goback();
             break;
           case false:
@@ -955,20 +976,20 @@ export class PicturesComponent
 
 
   goback() {
-    if (this.settingMsg === 'Deleting...'){
-      this.dialogRef.close(this.data); 
+    if (this.settingMsg === 'Deleting...') {
+      this.dialogRef.close(this.data);
       return;
     }
-    if( this.videostreamOn !== false ){
+    if (this.videostreamOn !== false) {
       this.videostreamRef.getTracks().map((val) => {
-        if(val !== null){
+        if (val !== null) {
           this.videoElement.remove();
           val.stop();
         }
         val.stop();
-      });    
+      });
     }
-    this.dialogRef.close(this.data); 
+    this.dialogRef.close(this.data);
   }
 
   startRecording() {
@@ -982,7 +1003,7 @@ export class PicturesComponent
         .getUserMedia(mediaConstraints)
         .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
       this.seconds = 9;
-      
+
       this.clearTimer();
       this.intervalId = window.setInterval(() => {
         this.seconds -= 1;
@@ -1069,27 +1090,27 @@ export class PicturesComponent
     `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },{provide: MAT_DATE_FORMATS, useValue: MY_FORMATS}]
+    provide: DateAdapter,
+    useClass: MomentDateAdapter,
+    deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+  }, { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class DatepickerComponent {
 
-  settingMsg= 'Edit Dates';
+  settingMsg = 'Edit Dates';
   exampleHeader = ExampleHeaderComponent;
   disableback: false;
   birthdate = new FormControl(moment(), [Validators.required]);
   Annidate = new FormControl(moment(), [Validators.required]);
   matcher = new MyErrorStateMatcher();
-  constructor(public dialogRef: MatDialogRef<DatepickerComponent>){
+  constructor(public dialogRef: MatDialogRef<DatepickerComponent>) {
 
   }
 
-  ontask(){
+  ontask() {
     this.dialogRef.close();
   }
-  goback(){
+  goback() {
     this.dialogRef.close();
   }
 
@@ -1132,11 +1153,11 @@ export class ExampleHeaderComponent<D> implements OnDestroy {
   private _destroyed = new Subject<void>();
 
   constructor(
-      private _calendar: MatCalendar<D>, private _dateAdapter: DateAdapter<D>,
-      @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats, cdr: ChangeDetectorRef) {
+    private _calendar: MatCalendar<D>, private _dateAdapter: DateAdapter<D>,
+    @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats, cdr: ChangeDetectorRef) {
     _calendar.stateChanges
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(() => cdr.markForCheck());
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => cdr.markForCheck());
   }
 
   ngOnDestroy() {
@@ -1146,8 +1167,8 @@ export class ExampleHeaderComponent<D> implements OnDestroy {
 
   get periodLabel() {
     return this._dateAdapter
-        .format(this._calendar.activeDate,this._dateFormats.display.monthYearLabel)
-        .toLocaleUpperCase();
+      .format(this._calendar.activeDate, this._dateFormats.display.monthYearLabel)
+      .toLocaleUpperCase();
   }
 
   previousClicked(mode: any) {
@@ -1155,7 +1176,7 @@ export class ExampleHeaderComponent<D> implements OnDestroy {
   }
 
   nextClicked(mode: any) {
-    this._calendar.activeDate =  this._dateAdapter.addCalendarMonths(this._calendar.activeDate, 1);
+    this._calendar.activeDate = this._dateAdapter.addCalendarMonths(this._calendar.activeDate, 1);
   }
 }
 //https://stackblitz.com/angular/jamxebpdmdea?file=src%2Fapp%2Finput-error-state-matcher-example.ts
@@ -1163,7 +1184,7 @@ export class ExampleHeaderComponent<D> implements OnDestroy {
 
 @Component({
   selector: 'app-header-gender',
-  styles:[`
+  styles: [`
   .demo-section {
     margin: 8px;
     padding: 16px;
@@ -1221,14 +1242,14 @@ export class GenderComponent {
   disableback: false;
   Gender = new FormControl('Male', [Validators.required]);
   matcher = new MyErrorStateMatcher();
-  constructor(public dialogRef: MatDialogRef<GenderComponent>){
+  constructor(public dialogRef: MatDialogRef<GenderComponent>) {
 
   }
 
-  ontask(){
+  ontask() {
     this.dialogRef.close();
   }
-  goback(){
+  goback() {
     this.dialogRef.close();
   }
 
@@ -1287,7 +1308,7 @@ export class GenderComponent {
 })
 export class RelationshipComponent implements OnInit {
   myForm: FormGroup;
-  settingMsg= 'Relationship Status';
+  settingMsg = 'Relationship Status';
   disabledslider: true;
   disableback: false;
   matcher = new MyErrorStateMatcher();
@@ -1296,38 +1317,39 @@ export class RelationshipComponent implements OnInit {
   labelPosition: 'before' | 'after' = 'after';
   disabled = false;
 
-  ngOnInit(){
+  ngOnInit() {
     this.myForm = this.formBuilder.group({
       Relation: false,
       kidsEnable: false,
       kidsnumber: 0
     });
-  
+
     this.onChanges();
   }
   onChanges(): void {
     this.myForm.get('kidsEnable').valueChanges.subscribe(val => {
-      if(val === false){
-        this.myForm.patchValue( 
-          { kidsnumber : 0 }
+      if (val === false) {
+        this.myForm.patchValue(
+          { kidsnumber: 0 }
         );
-      } else{
-        this.myForm.patchValue( 
-          { kidsnumber : 1 }
+      } else {
+        this.myForm.patchValue(
+          { kidsnumber: 1 }
         );
       }
     });
   }
-  constructor(public dialogRef: MatDialogRef<RelationshipComponent>, private formBuilder: FormBuilder){
+  constructor(public dialogRef: MatDialogRef<RelationshipComponent>, private formBuilder: FormBuilder) {
 
   }
 
-  ontask(){
+  ontask() {
     this.dialogRef.close();
   }
-  goback(){
+  goback() {
     this.dialogRef.close();
   }
 
 
 }
+

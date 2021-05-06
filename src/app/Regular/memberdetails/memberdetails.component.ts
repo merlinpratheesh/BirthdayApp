@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import {MediaMatcher} from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AngularFireAuth} from '@angular/fire/auth';
@@ -9,7 +9,9 @@ import { UserdataService } from 'src/app/service/userdata.service';
 @Component({
   selector: 'app-memberdetails',
   templateUrl: './memberdetails.component.html',
-  styleUrls: ['./memberdetails.component.scss']
+  styleUrls: ['./memberdetails.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class MemberdetailsComponent implements OnInit {
 
