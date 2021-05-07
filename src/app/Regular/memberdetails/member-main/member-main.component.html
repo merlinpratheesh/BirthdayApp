@@ -1,3 +1,4 @@
+
 <mat-card fxFlex.gt-xs="50vw" fxFlex.lt-sm="87.4vw" ngStyle.gt-xs="height: calc(100vh -64px)"
     ngStyle.lt-sm="height: calc(100vh -56px)">
     <mat-card-title fxLayoutAlign="center">Family Tree</mat-card-title>
@@ -16,8 +17,7 @@
                         <div class="flip-card-front">
                             <img [src]="picture  | async"    alt="profile image" width="100" height="100">
                         
-                        {{picture |async}}
-
+{{picture}}
                         </div>
                         <div *ngIf="this.Dates|async as dates ">
                             <div  *ngIf="dates.father.relationship === 'father'" class=" flip-card-back">

@@ -114,6 +114,9 @@ export class ProfileMainComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
 
+    console.log('state',history.state.data);
+     this.profilepic=history.state.data;
+
 
   }
   ngOnDestroy() {

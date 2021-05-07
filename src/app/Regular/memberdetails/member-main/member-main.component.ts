@@ -82,10 +82,8 @@ export class MemberMainComponent implements OnInit {
   Dates: BehaviorSubject<any>;
   profileUrl: Observable<string | null>;
   profileUrl1: Observable<string | null>;
-  profile: any;
-
-
-  
+  pictureData:string[]=[];
+  profile:Observable<string>[]=[];
   constructor(public myService: UserdataService, private ChangeDetector: ChangeDetectorRef, private router: Router,private storage: AngularFireStorage,  private db: AngularFirestore,private library: FaIconLibrary) {
 
     this.Dates = this.getAlldates((this.db.doc('/testme/one-id')));
@@ -93,31 +91,46 @@ export class MemberMainComponent implements OnInit {
 
     const ref = this.storage.ref('/uid-father.jpg');
     const ref1 = this.storage.ref('/uid-mother.jpg');
-
-
+    
     this.profileUrl = ref.getDownloadURL();
     this.profileUrl1 = ref1.getDownloadURL();
 
 
-     this.profile=[this.profileUrl,this.profileUrl1]
+    this.profile=[this.profileUrl,this.profileUrl1]
     console.log(this.profile);
 
-    
+
+
   
    }
 
    send(some){
-
-    this.router.navigate(['/profilepage']);
-
-    this.myService.myMethod(some);
+    
     console.log(some);
+
+    
+
+    this.pictureData=some.subscribe((data) => {
+
+      console.log(data);
+      console.log(this.pictureData);
+      this.router.navigate(['/profilepage'],{state:{data:data}});
+
+
+    });
+
+
+
+
 
 
     }
 
   ngOnInit(): void {
+
+
+
   }
-  log(val) { console.log(val); }
+  
 
 }
